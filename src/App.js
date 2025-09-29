@@ -3,6 +3,7 @@ import { Calculator } from 'lucide-react';
 
 export default function App() {
   const [name, setName] = useState('');
+  const [birthDate, setBirthDate] = useState('');
   const [result, setResult] = useState(null);
 
   const letterToNumber = {
@@ -68,9 +69,21 @@ export default function App() {
     return { final: num, steps };
   };
 
+  const calculateBhagyank = (dateString) => {
+    const digits = dateString.replace(/\D/g, '');
+    const total = digits.split('').reduce((sum, digit) => sum + parseInt(digit), 0);
+    return reduceToSingleDigit(total);
+  };
+
+  const calculateMoolank = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    return reduceToSingleDigit(day);
+  };
+
   const calculateNumerology = () => {
-    if (!name.trim()) {
-      setResult(null);
+    if (!name.trim() || !birthDate) {
+      alert('名前と生年月日を入力してください');
       return;
     }
 
@@ -83,36 +96,52 @@ export default function App() {
     }));
 
     const total = letterValues.reduce((sum, item) => sum + item.value, 0);
-    const reduction = reduceToSingleDigit(total);
+    const nameNumber = reduceToSingleDigit(total);
+    const bhagyank = calculateBhagyank(birthDate);
+    const moolank = calculateMoolank(birthDate);
 
     setResult({
       letterValues,
       total,
-      reduction
+      nameNumber,
+      bhagyank,
+      moolank
     });
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-blue-100 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-blue-100 p-4 md:p-8">
       <div className="max-w-2xl mx-auto">
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8">
           <div className="flex items-center justify-center mb-6">
             <Calculator className="w-10 h-10 text-purple-600 mr-3" />
-            <h1 className="text-3xl font-bold text-gray-800">名前の数秘術</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800">魂術協会®ヴェーダ数秘術</h1>
           </div>
           
-          <p className="text-gray-600 text-center mb-8">
-            アルファベットで名前を入力してください
+          <p className="text-gray-600 text-center mb-6">
+            アルファベットで名前と生年月日を入力してください
           </p>
 
-          <div className="mb-6">
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="例: John Smith"
-              className="w-full px-4 py-3 text-lg border-2 border-purple-300 rounded-lg focus:outline-none focus:border-purple-500 transition"
-            />
+          <div className="space-y-4 mb-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">名前</label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="例: John Smith"
+                className="w-full px-4 py-3 text-lg border-2 border-purple-300 rounded-lg focus:outline-none focus:border-purple-500 transition"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">生年月日</label>
+              <input
+                type="date"
+                value={birthDate}
+                onChange={(e) => setBirthDate(e.target.value)}
+                className="w-full px-4 py-3 text-lg border-2 border-purple-300 rounded-lg focus:outline-none focus:border-purple-500 transition"
+              />
+            </div>
           </div>
 
           <button
@@ -124,12 +153,33 @@ export default function App() {
 
           {result && (
             <div className="mt-8 space-y-6">
-              <div className={`result-section p-8 rounded-lg text-white text-center ${numberMeanings[result.reduction.final].color}`}>
-                <h2 className="text-2xl font-semibold mb-3">あなたの名前番号</h2>
-                <div className="text-6xl font-bold mb-4">{result.reduction.final}</div>
-                <p className="text-lg leading-relaxed">
-                  {numberMeanings[result.reduction.final].description}
-                </p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className={`p-6 rounded-lg text-white text-center ${numberMeanings[result.bhagyank.final].color}`}>
+                  <h3 className="text-sm font-semibold mb-2">バーギャング</h3>
+                  <p className="text-xs mb-3 opacity-90">人生全体の運命</p>
+                  <div className="text-5xl font-bold mb-3">{result.bhagyank.final}</div>
+                  <p className="text-xs leading-relaxed">
+                    {numberMeanings[result.bhagyank.final].description}
+                  </p>
+                </div>
+
+                <div className={`p-6 rounded-lg text-white text-center ${numberMeanings[result.moolank.final].color}`}>
+                  <h3 className="text-sm font-semibold mb-2">ムーランク</h3>
+                  <p className="text-xs mb-3 opacity-90">基本的な性格・ギフト</p>
+                  <div className="text-5xl font-bold mb-3">{result.moolank.final}</div>
+                  <p className="text-xs leading-relaxed">
+                    {numberMeanings[result.moolank.final].description}
+                  </p>
+                </div>
+
+                <div className={`p-6 rounded-lg text-white text-center ${numberMeanings[result.nameNumber.final].color}`}>
+                  <h3 className="text-sm font-semibold mb-2">名前番号</h3>
+                  <p className="text-xs mb-3 opacity-90">才能と成長方向</p>
+                  <div className="text-5xl font-bold mb-3">{result.nameNumber.final}</div>
+                  <p className="text-xs leading-relaxed">
+                    {numberMeanings[result.nameNumber.final].description}
+                  </p>
+                </div>
               </div>
 
               <div className="bg-purple-50 rounded-lg p-6">
@@ -150,23 +200,49 @@ export default function App() {
 
               <div className="bg-blue-50 rounded-lg p-6">
                 <h2 className="text-xl font-semibold text-gray-800 mb-4">計算過程</h2>
-                <div className="space-y-2">
-                  <div className="text-lg">
-                    <span className="text-gray-700">合計:</span>
-                    <span className="font-bold text-blue-600 ml-2 text-xl">{result.total}</span>
-                  </div>
-                  {result.reduction.steps.length > 1 && (
-                    <div className="flex items-center flex-wrap gap-2 mt-3">
-                      {result.reduction.steps.map((step, index) => (
+                
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="font-semibold text-gray-700 mb-2">バーギャング（生年月日全体）</h3>
+                    <div className="flex items-center flex-wrap gap-2">
+                      {result.bhagyank.steps.map((step, index) => (
                         <div key={index} className="flex items-center">
                           <span className="text-lg font-semibold text-gray-700">{step}</span>
-                          {index < result.reduction.steps.length - 1 && (
+                          {index < result.bhagyank.steps.length - 1 && (
                             <span className="text-gray-400 mx-2">→</span>
                           )}
                         </div>
                       ))}
                     </div>
-                  )}
+                  </div>
+
+                  <div>
+                    <h3 className="font-semibold text-gray-700 mb-2">ムーランク（生まれた日）</h3>
+                    <div className="flex items-center flex-wrap gap-2">
+                      {result.moolank.steps.map((step, index) => (
+                        <div key={index} className="flex items-center">
+                          <span className="text-lg font-semibold text-gray-700">{step}</span>
+                          {index < result.moolank.steps.length - 1 && (
+                            <span className="text-gray-400 mx-2">→</span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="font-semibold text-gray-700 mb-2">名前番号（合計: {result.total}）</h3>
+                    <div className="flex items-center flex-wrap gap-2">
+                      {result.nameNumber.steps.map((step, index) => (
+                        <div key={index} className="flex items-center">
+                          <span className="text-lg font-semibold text-gray-700">{step}</span>
+                          {index < result.nameNumber.steps.length - 1 && (
+                            <span className="text-gray-400 mx-2">→</span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
