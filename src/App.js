@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { Calculator } from 'lucide-react';
 
-export default function NumerologyApp() {
+export default function App() {
   const [name, setName] = useState('');
   const [result, setResult] = useState(null);
 
-  // アルファベットと数字の対応表
   const letterToNumber = {
     'A': 1, 'I': 1, 'J': 1, 'Q': 1, 'Y': 1,
     'B': 2, 'K': 2, 'R': 2,
@@ -17,12 +16,49 @@ export default function NumerologyApp() {
     'F': 8, 'P': 8
   };
 
-  // 数字の各桁を合計する関数
+  const numberMeanings = {
+    1: {
+      color: 'bg-red-500',
+      description: '自我、自信、エゴ、プライド、地位、名誉、権力、バイタリティ'
+    },
+    2: {
+      color: 'bg-white text-gray-800 border-2 border-gray-300',
+      description: '心、精神、変化、豊かさ、日常、家庭生活、内面'
+    },
+    3: {
+      color: 'bg-yellow-400',
+      description: '知恵、知識、道徳、幸運、修行、英知、拡大、発展、マントラ、先生'
+    },
+    4: {
+      color: 'bg-black',
+      description: '外交的、貪欲、中毒、快楽主義、物質主義'
+    },
+    5: {
+      color: 'bg-green-500',
+      description: '知識、学び、言葉、コミュニケーション、思考、星占術'
+    },
+    6: {
+      color: 'bg-white text-gray-800 border-2 border-gray-300',
+      description: '恋愛、結婚、芸術、生物、音楽、文化、贅沢'
+    },
+    7: {
+      color: 'bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-blue-500 to-purple-500',
+      description: '内向的、純粋、無欲、禁欲主義、直感、オカルト'
+    },
+    8: {
+      color: 'bg-blue-900',
+      description: '試練、努力、苦悩、障害、奉仕、農業、改革、奴隷'
+    },
+    9: {
+      color: 'bg-red-600',
+      description: '情熱、行動、集中力、欲望、怒り、短期、火、闘争、衝動'
+    }
+  };
+
   const sumDigits = (num) => {
     return num.toString().split('').reduce((sum, digit) => sum + parseInt(digit), 0);
   };
 
-  // 1桁になるまで計算
   const reduceToSingleDigit = (num) => {
     const steps = [num];
     while (num >= 10) {
@@ -32,27 +68,21 @@ export default function NumerologyApp() {
     return { final: num, steps };
   };
 
-  // 名前を数秘術で計算
   const calculateNumerology = () => {
     if (!name.trim()) {
       setResult(null);
       return;
     }
 
-    // 大文字に変換してスペース以外の文字を処理
     const upperName = name.toUpperCase();
     const letters = upperName.replace(/\s/g, '').split('');
     
-    // 各文字を数字に変換
     const letterValues = letters.map(letter => ({
       letter,
       value: letterToNumber[letter] || 0
     }));
 
-    // 合計を計算
     const total = letterValues.reduce((sum, item) => sum + item.value, 0);
-
-    // 1桁になるまで計算
     const reduction = reduceToSingleDigit(total);
 
     setResult({
@@ -94,7 +124,14 @@ export default function NumerologyApp() {
 
           {result && (
             <div className="mt-8 space-y-6">
-              {/* 文字ごとの数値 */}
+              <div className={`result-section p-8 rounded-lg text-white text-center ${numberMeanings[result.reduction.final].color}`}>
+                <h2 className="text-2xl font-semibold mb-3">あなたの運命数</h2>
+                <div className="text-6xl font-bold mb-4">{result.reduction.final}</div>
+                <p className="text-lg leading-relaxed">
+                  {numberMeanings[result.reduction.final].description}
+                </p>
+              </div>
+
               <div className="bg-purple-50 rounded-lg p-6">
                 <h2 className="text-xl font-semibold text-gray-800 mb-4">文字ごとの数値</h2>
                 <div className="flex flex-wrap gap-3">
@@ -111,7 +148,6 @@ export default function NumerologyApp() {
                 </div>
               </div>
 
-              {/* 計算過程 */}
               <div className="bg-blue-50 rounded-lg p-6">
                 <h2 className="text-xl font-semibold text-gray-800 mb-4">計算過程</h2>
                 <div className="space-y-2">
@@ -133,16 +169,9 @@ export default function NumerologyApp() {
                   )}
                 </div>
               </div>
-
-              {/* 最終結果 */}
-              <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg p-6 text-white text-center">
-                <h2 className="text-2xl font-semibold mb-3">name数秘</h2>
-                <div className="text-6xl font-bold">{result.reduction.final}</div>
-              </div>
             </div>
           )}
 
-          {/* 対応表 */}
           <div className="mt-8 p-6 bg-gray-50 rounded-lg">
             <h3 className="text-lg font-semibold text-gray-800 mb-3">文字と数字の対応表</h3>
             <div className="grid grid-cols-2 gap-2 text-sm">
