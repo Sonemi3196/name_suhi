@@ -125,7 +125,7 @@ export default function App() {
           {result && (
             <div className="mt-8 space-y-6">
               <div className={`result-section p-8 rounded-lg text-white text-center ${numberMeanings[result.reduction.final].color}`}>
-                <h2 className="text-2xl font-semibold mb-3">あなたの運命数</h2>
+                <h2 className="text-2xl font-semibold mb-3">あなたの名前番号</h2>
                 <div className="text-6xl font-bold mb-4">{result.reduction.final}</div>
                 <p className="text-lg leading-relaxed">
                   {numberMeanings[result.reduction.final].description}
