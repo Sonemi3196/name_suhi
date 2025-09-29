@@ -136,7 +136,7 @@ export default function NumerologyApp() {
 
               {/* 最終結果 */}
               <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg p-6 text-white text-center">
-                <h2 className="text-2xl font-semibold mb-3">あなたの運命数</h2>
+                <h2 className="text-2xl font-semibold mb-3">name数秘</h2>
                 <div className="text-6xl font-bold">{result.reduction.final}</div>
               </div>
             </div>
