@@ -115,7 +115,7 @@ export default function App() {
         <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8">
           <div className="flex items-center justify-center mb-6">
             <Calculator className="w-10 h-10 text-purple-600 mr-3" />
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-800">魂術協会®ヴェーダ数秘術</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800">数秘術</h1>
           </div>
           
           <p className="text-gray-600 text-center mb-6">
