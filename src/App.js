@@ -164,7 +164,7 @@ export default function App() {
         <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8">
           <div className="flex items-center justify-center mb-6">
             <Calculator className="w-10 h-10 text-purple-600 mr-3" />
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-800">名前の数秘術</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800">数秘術</h1>
           </div>
           
           <p className="text-gray-600 text-center mb-6">
@@ -203,7 +203,7 @@ export default function App() {
           {result && (
             <div className="mt-8 space-y-6">
               <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg p-6">
-                <h2 className="text-xl font-semibold text-gray-800 mb-4 text-center">ロシュ（グリッド）</h2>
+                <h2 className="text-xl font-semibold text-gray-800 mb-4 text-center">グリッド</h2>
                 <div className="grid grid-cols-3 gap-2 max-w-xs mx-auto">
                   <div className="aspect-square bg-white border-2 border-purple-300 rounded-lg flex items-center justify-center text-2xl font-bold text-purple-600">
                     {result.grid[3] || ''}
