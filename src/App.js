@@ -75,10 +75,46 @@ export default function App() {
     return reduceToSingleDigit(total);
   };
 
-  const calculateMoolank = (dateString) => {
+  const calculateGrid = (dateString, bhagyankNum, moolankNum, moolankDay) => {
     const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
     const day = date.getDate();
-    return reduceToSingleDigit(day);
+    
+    const yearLastTwo = year % 100;
+    const yearDigits = yearLastTwo.toString().split('').map(Number);
+    const monthDigits = month.toString().split('').map(Number);
+    const dayDigits = day.toString().split('').map(Number);
+    
+    const allDigits = [
+      ...yearDigits,
+      ...monthDigits,
+      ...dayDigits,
+      bhagyankNum
+    ];
+    
+    if (day >= 10) {
+      allDigits.push(moolankNum);
+    }
+    
+    const digitCount = {};
+    allDigits.forEach(digit => {
+      digitCount[digit] = (digitCount[digit] || 0) + 1;
+    });
+    
+    const grid = {
+      3: digitCount[3] ? '3'.repeat(digitCount[3]) : '',
+      1: digitCount[1] ? '1'.repeat(digitCount[1]) : '',
+      9: digitCount[9] ? '9'.repeat(digitCount[9]) : '',
+      6: digitCount[6] ? '6'.repeat(digitCount[6]) : '',
+      7: digitCount[7] ? '7'.repeat(digitCount[7]) : '',
+      5: digitCount[5] ? '5'.repeat(digitCount[5]) : '',
+      2: digitCount[2] ? '2'.repeat(digitCount[2]) : '',
+      8: digitCount[8] ? '8'.repeat(digitCount[8]) : '',
+      4: digitCount[4] ? '4'.repeat(digitCount[4]) : ''
+    };
+    
+    return grid;
   };
 
   const calculateNumerology = () => {
@@ -87,26 +123,35 @@ export default function App() {
       return;
     }
 
-    const upperName = name.toUpperCase();
-    const letters = upperName.replace(/\s/g, '').split('');
-    
-    const letterValues = letters.map(letter => ({
-      letter,
-      value: letterToNumber[letter] || 0
-    }));
+    try {
+      const upperName = name.toUpperCase();
+      const letters = upperName.replace(/\s/g, '').split('');
+      
+      const letterValues = letters.map(letter => ({
+        letter,
+        value: letterToNumber[letter] || 0
+      }));
 
-    const total = letterValues.reduce((sum, item) => sum + item.value, 0);
-    const nameNumber = reduceToSingleDigit(total);
-    const bhagyank = calculateBhagyank(birthDate);
-    const moolank = calculateMoolank(birthDate);
+      const total = letterValues.reduce((sum, item) => sum + item.value, 0);
+      const nameNumber = reduceToSingleDigit(total);
+      const bhagyank = calculateBhagyank(birthDate);
+      const moolank = calculateMoolank(birthDate);
+      const date = new Date(birthDate);
+      const day = date.getDate();
+      const grid = calculateGrid(birthDate, bhagyank.final, moolank.final, day);
 
-    setResult({
-      letterValues,
-      total,
-      nameNumber,
-      bhagyank,
-      moolank
-    });
+      setResult({
+        letterValues,
+        total,
+        nameNumber,
+        bhagyank,
+        moolank,
+        grid
+      });
+    } catch (error) {
+      console.error('計算エラー:', error);
+      alert('計算中にエラーが発生しました: ' + error.message);
+    }
   };
 
   return (
@@ -153,6 +198,39 @@ export default function App() {
 
           {result && (
             <div className="mt-8 space-y-6">
+              <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg p-6">
+                <h2 className="text-xl font-semibold text-gray-800 mb-4 text-center">ロシュ（グリッド）</h2>
+                <div className="grid grid-cols-3 gap-2 max-w-xs mx-auto">
+                  <div className="aspect-square bg-white border-2 border-purple-300 rounded-lg flex items-center justify-center text-2xl font-bold text-purple-600">
+                    {result.grid[3] || ''}
+                  </div>
+                  <div className="aspect-square bg-white border-2 border-purple-300 rounded-lg flex items-center justify-center text-2xl font-bold text-purple-600">
+                    {result.grid[1] || ''}
+                  </div>
+                  <div className="aspect-square bg-white border-2 border-purple-300 rounded-lg flex items-center justify-center text-2xl font-bold text-purple-600">
+                    {result.grid[9] || ''}
+                  </div>
+                  <div className="aspect-square bg-white border-2 border-purple-300 rounded-lg flex items-center justify-center text-2xl font-bold text-purple-600">
+                    {result.grid[6] || ''}
+                  </div>
+                  <div className="aspect-square bg-white border-2 border-purple-300 rounded-lg flex items-center justify-center text-2xl font-bold text-purple-600">
+                    {result.grid[7] || ''}
+                  </div>
+                  <div className="aspect-square bg-white border-2 border-purple-300 rounded-lg flex items-center justify-center text-2xl font-bold text-purple-600">
+                    {result.grid[5] || ''}
+                  </div>
+                  <div className="aspect-square bg-white border-2 border-purple-300 rounded-lg flex items-center justify-center text-2xl font-bold text-purple-600">
+                    {result.grid[2] || ''}
+                  </div>
+                  <div className="aspect-square bg-white border-2 border-purple-300 rounded-lg flex items-center justify-center text-2xl font-bold text-purple-600">
+                    {result.grid[8] || ''}
+                  </div>
+                  <div className="aspect-square bg-white border-2 border-purple-300 rounded-lg flex items-center justify-center text-2xl font-bold text-purple-600">
+                    {result.grid[4] || ''}
+                  </div>
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className={`p-6 rounded-lg text-center ${numberMeanings[result.bhagyank.final].color}`}>
                   <h3 className="text-sm font-bold mb-2">バーギャング</h3>
