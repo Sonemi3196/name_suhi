@@ -75,7 +75,13 @@ export default function App() {
     return reduceToSingleDigit(total);
   };
 
-  const calculateGrid = (dateString, bhagyankNum, moolankNum, moolankDay) => {
+  const calculateMoolank = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    return reduceToSingleDigit(day);
+  };
+
+  const calculateGrid = (dateString, bhagyankNum, moolankNum) => {
     const date = new Date(dateString);
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
@@ -136,9 +142,7 @@ export default function App() {
       const nameNumber = reduceToSingleDigit(total);
       const bhagyank = calculateBhagyank(birthDate);
       const moolank = calculateMoolank(birthDate);
-      const date = new Date(birthDate);
-      const day = date.getDate();
-      const grid = calculateGrid(birthDate, bhagyank.final, moolank.final, day);
+      const grid = calculateGrid(birthDate, bhagyank.final, moolank.final);
 
       setResult({
         letterValues,
